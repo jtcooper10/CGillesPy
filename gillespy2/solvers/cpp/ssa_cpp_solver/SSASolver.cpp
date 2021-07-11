@@ -20,38 +20,14 @@
 #include <random>
 #include <csignal>
 #include <string.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include "SSASolver.h"
 
 namespace Gillespy
 {
 	volatile bool interrupted = false;
 
-#ifdef _WIN32
-	BOOL WINAPI eventHandler(DWORD CtrlType)
-	{
-		interrupted = true;
-		return TRUE;
-	}
-#endif
-
-	void signalHandler(int signum)
-	{
-		interrupted = true;
-	}
-
 	void ssa_direct(Simulation<unsigned int> *simulation)
 	{
-#ifdef _WIN32
-		SetConsoleCtrlHandler(eventHandler, TRUE);
-#else
-		signal(SIGINT, signalHandler);
-#endif
-
 		if (simulation)
 		{
 			std::mt19937_64 rng(simulation->random_seed);
